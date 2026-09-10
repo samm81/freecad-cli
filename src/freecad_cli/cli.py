@@ -176,13 +176,20 @@ def insert_part(ctx, path):
 
 
 @cli.command("install-addon")
-def install_addon():
+@click.option(
+    "--mod-dir",
+    "path_mod_dir",
+    type=click.Path(file_okay=False, dir_okay=True, path_type=Path),
+    default=None,
+    help="FreeCAD Mod directory (default: detect the user data directory)",
+)
+def install_addon(path_mod_dir: Path | None):
     """Install the RPC server addon into FreeCAD."""
     addon_src = Path(__file__).resolve().parent.parent.parent / "addon" / "FreecadCli"
     if not addon_src.is_dir():
         error(f"Addon source not found: {addon_src}", "invalid_input")
 
-    mod_dir = _freecad_mod_dir(Path.home(), platform.system())
+    mod_dir = path_mod_dir or _freecad_mod_dir(Path.home(), platform.system())
 
     mod_dir.mkdir(parents=True, exist_ok=True)
     link_path = mod_dir / "FreecadCli"
@@ -204,10 +211,19 @@ def _freecad_mod_dir(home_dir: Path, system: str) -> Path:
         data_dir = home_dir / "Library" / "Application Support" / "FreeCAD"
     elif system == "Linux":
         data_dir = home_dir / ".local" / "share" / "FreeCAD"
+    elif system == "Windows":
+        data_dir = home_dir / "AppData" / "Roaming" / "FreeCAD"
     else:
         error(f"Unsupported platform: {system}", "invalid_input")
 
     versioned_data_dirs = sorted(path for path in data_dir.glob("v*") if path.is_dir())
+    if len(versioned_data_dirs) > 1:
+        names_versioned = ", ".join(path.name for path in versioned_data_dirs)
+        error(
+            "Multiple FreeCAD user-data directories found: "
+            f"{names_versioned}. Pass --mod-dir to select one.",
+            "ambiguous_install_path",
+        )
     if versioned_data_dirs:
         return versioned_data_dirs[-1] / "Mod"
     return data_dir / "Mod"

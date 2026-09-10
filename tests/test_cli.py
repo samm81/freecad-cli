@@ -160,3 +160,28 @@ def test_install_addon_uses_versioned_directory(tmp_path: Path, monkeypatch) -> 
     link_path = versioned_data_dir / "Mod" / "FreecadCli"
     assert result.exit_code == 0
     assert link_path.is_symlink()
+
+
+def test_install_addon_uses_explicit_mod_directory(tmp_path: Path) -> None:
+    mod_dir = tmp_path / "freecad" / "Mod"
+
+    result = CliRunner().invoke(cli, ["install-addon", "--mod-dir", str(mod_dir)])
+
+    link_path = mod_dir / "FreecadCli"
+    assert result.exit_code == 0
+    assert link_path.is_symlink()
+
+
+def test_freecad_mod_dir_rejects_multiple_versioned_directories(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    data_dir = tmp_path / ".local" / "share" / "FreeCAD"
+    (data_dir / "v1-0").mkdir(parents=True)
+    (data_dir / "v1-1").mkdir()
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    result = CliRunner().invoke(cli, ["install-addon"])
+
+    assert result.exit_code != 0
