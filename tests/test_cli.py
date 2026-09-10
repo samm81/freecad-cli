@@ -1,10 +1,11 @@
 import json
+import platform
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
 
-from freecad_cli.cli import cli
+from freecad_cli.cli import _freecad_mod_dir, cli
 
 
 def _mock_proxy():
@@ -137,3 +138,25 @@ def test_rpc_error_propagated():
         mock_cls.return_value = mock
         result = runner.invoke(cli, ["create-document", "Test"])
         assert result.exit_code != 0
+
+
+def test_freecad_mod_dir_prefers_versioned_directory(tmp_path: Path) -> None:
+    data_dir = tmp_path / ".local" / "share" / "FreeCAD" / "v1-1"
+    data_dir.mkdir(parents=True)
+
+    mod_dir = _freecad_mod_dir(tmp_path, "Linux")
+
+    assert mod_dir == data_dir / "Mod"
+
+
+def test_install_addon_uses_versioned_directory(tmp_path: Path, monkeypatch) -> None:
+    versioned_data_dir = tmp_path / ".local" / "share" / "FreeCAD" / "v1-1"
+    versioned_data_dir.mkdir(parents=True)
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(platform, "system", lambda: "Linux")
+
+    result = CliRunner().invoke(cli, ["install-addon"])
+
+    link_path = versioned_data_dir / "Mod" / "FreecadCli"
+    assert result.exit_code == 0
+    assert link_path.is_symlink()

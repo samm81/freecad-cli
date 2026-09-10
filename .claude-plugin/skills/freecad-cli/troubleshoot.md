@@ -23,7 +23,7 @@ Check in order:
 3. Did you restart FreeCAD **after** installing the addon?
 4. Is the addon in the correct location?
    - macOS: `~/Library/Application Support/FreeCAD/Mod/FreecadCli/`
-   - Linux: `~/.local/share/FreeCAD/Mod/FreecadCli/`
+   - Linux: `~/.local/share/FreeCAD/<version>/Mod/FreecadCli/` (FreeCAD 1.1: `v1-1`)
 
 ### `install-addon` shows `Path already exists`
 
@@ -31,8 +31,8 @@ Remove existing install and retry:
 ```sh
 # macOS
 rm ~/Library/Application\ Support/FreeCAD/Mod/FreecadCli
-# Linux
-rm ~/.local/share/FreeCAD/Mod/FreecadCli
+# Linux, replace `<version>` with the installed FreeCAD user-data version
+rm ~/.local/share/FreeCAD/<version>/Mod/FreecadCli
 ```
 
 ### `uv tool install -e .` fails

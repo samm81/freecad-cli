@@ -182,13 +182,7 @@ def install_addon():
     if not addon_src.is_dir():
         error(f"Addon source not found: {addon_src}", "invalid_input")
 
-    system = platform.system()
-    if system == "Darwin":
-        mod_dir = Path.home() / "Library" / "Application Support" / "FreeCAD" / "Mod"
-    elif system == "Linux":
-        mod_dir = Path.home() / ".local" / "share" / "FreeCAD" / "Mod"
-    else:
-        error(f"Unsupported platform: {system}", "invalid_input")
+    mod_dir = _freecad_mod_dir(Path.home(), platform.system())
 
     mod_dir.mkdir(parents=True, exist_ok=True)
     link_path = mod_dir / "FreecadCli"
@@ -203,3 +197,17 @@ def install_addon():
     success({"path": str(link_path), "source": str(addon_src)})
 
 
+def _freecad_mod_dir(home_dir: Path, system: str) -> Path:
+    """Return the user Mod directory for a supported FreeCAD installation."""
+
+    if system == "Darwin":
+        data_dir = home_dir / "Library" / "Application Support" / "FreeCAD"
+    elif system == "Linux":
+        data_dir = home_dir / ".local" / "share" / "FreeCAD"
+    else:
+        error(f"Unsupported platform: {system}", "invalid_input")
+
+    versioned_data_dirs = sorted(path for path in data_dir.glob("v*") if path.is_dir())
+    if versioned_data_dirs:
+        return versioned_data_dirs[-1] / "Mod"
+    return data_dir / "Mod"
