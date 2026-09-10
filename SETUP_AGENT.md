@@ -18,7 +18,7 @@ Run these commands in order:
 
 ```sh
 # 1. Clone the repository
-git clone https://github.com/yoshikouki/freecad-cli.git
+git clone https://github.com/samm81/freecad-cli.git
 cd freecad-cli
 
 # 2. Install the CLI tool
@@ -26,6 +26,13 @@ uv tool install -e .
 
 # 3. Install the FreeCAD addon (creates a symlink into FreeCAD's Mod directory)
 freecad-cli install-addon
+```
+
+If more than one FreeCAD user-data version is installed, pass the matching
+`Mod` directory explicitly:
+
+```sh
+freecad-cli install-addon --mod-dir <path-to-freecad-Mod-directory>
 ```
 
 After step 3, **restart FreeCAD**. The RPC server addon will auto-start on every launch.

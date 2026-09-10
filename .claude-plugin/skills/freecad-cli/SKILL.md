@@ -37,7 +37,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 If the user provides a repository path, use it. Otherwise clone:
 
 ```sh
-git clone https://github.com/yoshikouki/freecad-cli.git
+git clone https://github.com/samm81/freecad-cli.git
 cd freecad-cli
 ```
 
@@ -56,6 +56,8 @@ freecad-cli install-addon
 ```
 
 Expected: JSON with `"status": "ok"`. `Already installed` is normal.
+If multiple FreeCAD user-data versions are installed, pass the matching
+`Mod` directory with `--mod-dir <path>`.
 
 ### 5. Restart FreeCAD
 
@@ -149,6 +151,12 @@ freecad-cli set-active-document MyPart
 freecad-cli export stl -o output.stl
 freecad-cli export step -o output.step --object MyBody
 freecad-cli export fcstd -o model.FCStd
+```
+
+If the automatic addon location is ambiguous, install it explicitly:
+
+```sh
+freecad-cli install-addon --mod-dir <path-to-freecad-Mod-directory>
 ```
 
 ### Screenshot

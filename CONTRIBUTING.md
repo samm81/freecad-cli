@@ -16,7 +16,7 @@ Thank you for your interest in contributing!
 **Prerequisites:** Python 3.12+, [uv](https://docs.astral.sh/uv/)
 
 ```bash
-git clone https://github.com/yoshikouki/freecad-cli.git
+git clone https://github.com/samm81/freecad-cli.git
 cd freecad-cli
 uv sync
 ```

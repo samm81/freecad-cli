@@ -21,6 +21,9 @@ The addon is a minimal XML-RPC server that runs inside FreeCAD. It only exposes 
 3. Restart FreeCAD
 4. Verify: `freecad-cli ping`
 
+If more than one FreeCAD user-data version is installed, select the matching
+`Mod` directory explicitly with `freecad-cli install-addon --mod-dir <path>`.
+
 ## Usage
 
 ### execute-code
@@ -80,8 +83,8 @@ The skill is designed around the project's command philosophy: prefer `freecad-c
 Install as a Claude Code plugin:
 
 ```bash
-/plugin marketplace add yoshikouki/freecad-cli
-/plugin install freecad-cli@yoshikouki-freecad-cli
+/plugin marketplace add samm81/freecad-cli
+/plugin install freecad-cli@samm81-freecad-cli
 ```
 
 The plugin provides the `/freecad-cli` skill (setup, operation reference, troubleshooting) and a `freecad-operator` agent for CAD modeling tasks.
@@ -90,7 +93,7 @@ The plugin provides the `/freecad-cli` skill (setup, operation reference, troubl
 
 Copy and paste this prompt to your AI agent:
 
-> Install freecad-cli by following the setup guide at `SETUP_AGENT.md` in the repository: https://github.com/yoshikouki/freecad-cli. If any prerequisites are missing, ask me before installing them.
+> Install freecad-cli by following the setup guide at `SETUP_AGENT.md` in the repository: https://github.com/samm81/freecad-cli. If any prerequisites are missing, ask me before installing them.
 
 ## Development
 

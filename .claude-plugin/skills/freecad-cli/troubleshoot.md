@@ -24,6 +24,10 @@ Check in order:
 4. Is the addon in the correct location?
    - macOS: `~/Library/Application Support/FreeCAD/Mod/FreecadCli/`
    - Linux: `~/.local/share/FreeCAD/<version>/Mod/FreecadCli/` (FreeCAD 1.1: `v1-1`)
+   - Windows: `%APPDATA%/FreeCAD/<version>/Mod/FreecadCli/`
+
+If more than one version is installed, rerun setup with the exact Mod
+directory: `freecad-cli install-addon --mod-dir <path>`.
 
 ### `install-addon` shows `Path already exists`
 
